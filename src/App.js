@@ -1,10 +1,10 @@
 import React from "react";
-import Timer from "./Timer";
+import RecordNumbers from "./RecordNumbers";
 
 function App() {
   return (
     <div className="App">
-      <Timer />
+      <RecordNumbers />
     </div>
   );
 }
