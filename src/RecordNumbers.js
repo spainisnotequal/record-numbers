@@ -26,18 +26,31 @@ const RecordNumbers = () => {
     setIsActive(!isActive);
   };
 
-  const stop = () => {
-    // Reset the timer
-    setIndex(0);
+  const reset = () => {
+    // Stop the timer and go to the first element
     setIsActive(false);
+    setIndex(0);
+  };
+
+  const stop = () => {
+    // Stop the timer and go to the last element
+    setIsActive(false);
+    setIndex(array.length - 1);
   };
 
   return (
     <>
       <h2>{array[index]}</h2>
       <br />
-      <button onClick={toggle}>{isActive ? "Pause" : "Start"}</button>
-      <button onClick={stop}>Stop</button>
+      <button onClick={toggle} disabled={isActive ? true : false}>
+        {isActive ? "Pause" : "Start"}
+      </button>
+      <button onClick={reset} disabled={isActive ? false : true}>
+        Reset
+      </button>
+      <button onClick={stop} disabled={isActive ? false : true}>
+        Stop
+      </button>
     </>
   );
 };
