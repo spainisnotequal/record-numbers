@@ -2,20 +2,24 @@ import React, { useState, useEffect } from "react";
 
 const RecordNumbers = () => {
   // Hooks for the Timer
-  const [seconds, setSeconds] = useState(0);
+  const [index, setIndex] = useState(0);
   const [isActive, setIsActive] = useState(false);
+
+  const array = ["zero", "one", "two", "three", "four", "five"];
 
   useEffect(() => {
     let interval = null;
-    if (isActive) {
+    if (isActive && index < array.length - 1) {
       interval = setInterval(() => {
-        setSeconds((seconds) => seconds + 1);
+        setIndex((seconds) => seconds + 1);
       }, 1000);
-    } else if (seconds !== 0) {
+    } else if (index !== 0) {
       clearInterval(interval);
     }
-    return () => clearInterval(interval);
-  }, [isActive, seconds]);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isActive, index, array]);
 
   const toggle = () => {
     // Start the timer
@@ -24,13 +28,13 @@ const RecordNumbers = () => {
 
   const stop = () => {
     // Reset the timer
-    setSeconds(0);
+    setIndex(0);
     setIsActive(false);
   };
 
   return (
     <>
-      <h2>{seconds}</h2>
+      <h2>{array[index]}</h2>
       <br />
       <button onClick={toggle}>{isActive ? "Pause" : "Start"}</button>
       <button onClick={stop}>Stop</button>
