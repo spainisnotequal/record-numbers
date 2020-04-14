@@ -21,23 +21,32 @@ const RecordNumbers = () => {
     };
   }, [isActive, index, array]);
 
-  let mediaRecorder = useRef(null);
-  let mediaChuncks = useRef([]);
+  const mediaStream = useRef(null);
+  const mediaRecorder = useRef(null);
+  const mediaChuncks = useRef([]);
 
-  useEffect(() => {
+  const getMediaStream = () => {
+    console.log("Acquiring media");
     navigator.mediaDevices
       .getUserMedia({ audio: true })
-      .then((stream) => (mediaRecorder.current = new MediaRecorder(stream)))
+      .then((stream) => (mediaStream.current = stream))
       .catch((err) => {
         console.log("The following getUserMedia error occured: " + err);
       });
+  };
+
+  useEffect(() => {
+    getMediaStream();
   }, []);
 
   const startRecording = () => {
-    mediaRecorder.current.start();
-    console.log("recording");
-    mediaRecorder.current.ondataavailable = ({ data }) =>
-      mediaChuncks.current.push(data);
+    if (mediaStream.current) {
+      mediaRecorder.current = new MediaRecorder(mediaStream.current);
+      mediaRecorder.current.start();
+      console.log("recording");
+      mediaRecorder.current.ondataavailable = ({ data }) =>
+        mediaChuncks.current.push(data);
+    }
   };
 
   const pauseRecording = () => {
@@ -64,6 +73,13 @@ const RecordNumbers = () => {
     }
   };
 
+  const resetRecording = () => {
+    if (mediaRecorder.current) {
+      mediaRecorder.current.stop();
+      console.log("reset audio");
+    }
+  };
+
   const toggle = () => {
     // Start the timer
     setIsActive(!isActive);
@@ -74,7 +90,7 @@ const RecordNumbers = () => {
     // Stop the timer and go to the first element
     setIsActive(false);
     setIndex(0);
-    stopRecording();
+    resetRecording();
   };
 
   const stop = () => {
