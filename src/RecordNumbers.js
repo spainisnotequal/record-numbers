@@ -5,7 +5,12 @@ const RecordNumbers = () => {
   const [index, setIndex] = useState(0);
   const [isActive, setIsActive] = useState(false);
 
-  const array = ["zero", "one", "two", "three", "four", "five"];
+  const bicycle = require("./images/bicycle.jpg");
+  const car = require("./images/car.jpg");
+  const dog = require("./images/dog.jpg");
+  const horse = require("./images/horse.jpg");
+
+  const array = [bicycle, car, dog, horse];
 
   useEffect(() => {
     let interval = null;
@@ -102,7 +107,13 @@ const RecordNumbers = () => {
 
   return (
     <>
-      <h2>{array[index]}</h2>
+      <h2>
+        <img
+          src={array[index]}
+          alt=""
+          style={{ height: "128px", width: "128px" }}
+        />
+      </h2>
       <br />
       <button onClick={toggle}>{isActive ? "Pause" : "Start"}</button>
       <button onClick={reset}>Reset</button>
