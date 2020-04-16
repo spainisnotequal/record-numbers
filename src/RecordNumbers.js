@@ -57,7 +57,7 @@ const RecordNumbers = () => {
     if (mediaStream.current) {
       mediaRecorder.current = new MediaRecorder(mediaStream.current);
       mediaRecorder.current.start();
-      console.log("recording");
+      console.log(mediaRecorder.current.state);
       mediaRecorder.current.ondataavailable = ({ data }) =>
         mediaChuncks.current.push(data);
     }
@@ -66,31 +66,33 @@ const RecordNumbers = () => {
   const pauseRecording = () => {
     if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
       mediaRecorder.current.pause();
+      console.log(mediaRecorder.current.state);
     }
   };
   const resumeRecording = () => {
     if (mediaRecorder.current && mediaRecorder.current.state === "paused") {
       mediaRecorder.current.resume();
+      console.log(mediaRecorder.current.state);
     }
   };
 
   const stopRecording = () => {
-    if (mediaRecorder.current) {
-      console.log("stopping");
+    if (mediaRecorder.current && mediaRecorder.current.state !== "inactive") {
       mediaRecorder.current.stop();
+      console.log(mediaRecorder.current.state);
 
       const blobProperty = { type: "audio/wav" };
       const blob = new Blob(mediaChuncks.current, blobProperty);
       const url = URL.createObjectURL(blob);
-      console.log("stopped");
+      console.log("Bolb generated...");
       console.log(url);
     }
   };
 
   const resetRecording = () => {
-    if (mediaRecorder.current) {
+    if (mediaRecorder.current && mediaRecorder.current.state !== "inactive") {
       mediaRecorder.current.stop();
-      console.log("reset audio");
+      console.log(mediaRecorder.current.state);
     }
   };
 
@@ -121,6 +123,7 @@ const RecordNumbers = () => {
 
   const stop = () => {
     setIsActive(false);
+    setIsPaused(false);
     setIndex(array.length - 1);
     stopRecording();
   };
