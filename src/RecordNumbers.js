@@ -43,9 +43,15 @@ const RecordNumbers = () => {
       });
   };
 
+  // Get media stream when loading the app
   useEffect(() => {
     getMediaStream();
   }, []);
+
+  // Stop recording when reaching the last image
+  useEffect(() => {
+    if (isActive && index === array.length - 1) stopRecording();
+  }, [isActive, index, array]);
 
   const startRecording = () => {
     if (mediaStream.current) {
@@ -125,7 +131,10 @@ const RecordNumbers = () => {
         <img
           src={array[index]}
           alt=""
-          style={{ height: "128px", width: "128px" }}
+          style={{
+            height: "128px",
+            width: "128px",
+          }}
         />
       </h2>
       <br />
