@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 const RecordNumbers = () => {
+  const IMAGE_CHANGE_INTERVAL = 2000;
   // Hooks for the Timer
   const [index, setIndex] = useState(0);
   const [isActive, setIsActive] = useState(false);
@@ -17,7 +18,7 @@ const RecordNumbers = () => {
     if (isActive && index < array.length - 1) {
       interval = setInterval(() => {
         setIndex((seconds) => seconds + 1);
-      }, 1000);
+      }, IMAGE_CHANGE_INTERVAL);
     } else if (index !== 0) {
       clearInterval(interval);
     }
