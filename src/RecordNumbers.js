@@ -26,9 +26,11 @@ const RecordNumbers = () => {
     };
   }, [isActive, index, array]);
 
+  // Hooks for the Timer
   const mediaStream = useRef(null);
   const mediaRecorder = useRef(null);
   const mediaChuncks = useRef([]);
+  const [isPaused, setIsPaused] = useState(false);
 
   const getMediaStream = () => {
     console.log("Acquiring media");
@@ -85,21 +87,32 @@ const RecordNumbers = () => {
     }
   };
 
-  const toggle = () => {
-    // Start the timer
+  const start = () => {
     setIsActive(!isActive);
+    setIsPaused(false);
     startRecording();
   };
 
+  const pause = () => {
+    setIsActive(!isActive);
+    setIsPaused(true);
+    pauseRecording();
+  };
+
+  const resume = () => {
+    setIsActive(!isActive);
+    setIsPaused(false);
+    resumeRecording();
+  };
+
   const reset = () => {
-    // Stop the timer and go to the first element
     setIsActive(false);
+    setIsPaused(false);
     setIndex(0);
     resetRecording();
   };
 
   const stop = () => {
-    // Stop the timer and go to the last element
     setIsActive(false);
     setIndex(array.length - 1);
     stopRecording();
@@ -115,7 +128,9 @@ const RecordNumbers = () => {
         />
       </h2>
       <br />
-      <button onClick={toggle}>{isActive ? "Pause" : "Start"}</button>
+      <button onClick={!isPaused ? (!isActive ? start : pause) : resume}>
+        {!isPaused ? (!isActive ? "Start" : "Pause") : "Resume"}
+      </button>
       <button onClick={reset}>Reset</button>
       <button onClick={stop}>Stop</button>
     </>
