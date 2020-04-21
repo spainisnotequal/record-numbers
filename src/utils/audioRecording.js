@@ -3,13 +3,16 @@ const getMediaStream = () => {
   return navigator.mediaDevices.getUserMedia({ audio: true });
 };
 
+let dataAvailableCount = 0;
 const startRecording = (mediaStream, mediaRecorder, mediaChuncks) => {
   if (mediaStream.current) {
     mediaRecorder.current = new MediaRecorder(mediaStream.current);
     mediaRecorder.current.start();
     console.log(mediaRecorder.current.state);
-    mediaRecorder.current.ondataavailable = ({ data }) =>
+    mediaRecorder.current.ondataavailable = ({ data }) => {
       mediaChuncks.current.push(data);
+      console.log("data available counter:", ++dataAvailableCount);
+    };
   }
 };
 
@@ -18,9 +21,14 @@ const stopRecording = (mediaRecorder, mediaChuncks) => {
     mediaRecorder.current.stop();
     console.log(mediaRecorder.current.state);
 
-    const blobProperty = { type: "audio/wav" };
-    const blob = new Blob(mediaChuncks.current, blobProperty);
-    console.log("Blob generated:", blob);
+    mediaRecorder.current.onstop = () => {
+      const blobProperty = { type: "audio/wav" };
+      const blob = new Blob(mediaChuncks.current, blobProperty);
+      console.log("Blob generated:", blob);
+
+      // Reset mediaChunks
+      mediaChuncks.current = [];
+    };
   }
 };
 
