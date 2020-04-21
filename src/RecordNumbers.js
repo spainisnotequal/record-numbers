@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import { getMediaStream } from "./utils/audioRecording";
+import { getMediaStream, startRecording } from "./utils/audioRecording";
 
 const RecordNumbers = () => {
   const IMAGE_CHANGE_INTERVAL = 1000;
@@ -30,16 +30,6 @@ const RecordNumbers = () => {
   const mediaChuncks = useRef([]);
   const [isPaused, setIsPaused] = useState(false);
 
-  // const getMediaStream = () => {
-  //   console.log("Acquiring media");
-  //   navigator.mediaDevices
-  //     .getUserMedia({ audio: true })
-  //     .then((stream) => (mediaStream.current = stream))
-  //     .catch((err) => {
-  //       console.log("The following getUserMedia error occured: " + err);
-  //     });
-  // };
-
   // Get media stream when loading the app
   useEffect(() => {
     getMediaStream()
@@ -54,16 +44,6 @@ const RecordNumbers = () => {
   useEffect(() => {
     if (isActive && index === array.length - 1) stopRecording();
   }, [isActive, index, array]);
-
-  const startRecording = () => {
-    if (mediaStream.current) {
-      mediaRecorder.current = new MediaRecorder(mediaStream.current);
-      mediaRecorder.current.start();
-      console.log(mediaRecorder.current.state);
-      mediaRecorder.current.ondataavailable = ({ data }) =>
-        mediaChuncks.current.push(data);
-    }
-  };
 
   const pauseRecording = () => {
     if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
@@ -101,7 +81,7 @@ const RecordNumbers = () => {
   const start = () => {
     setIsActive(!isActive);
     setIsPaused(false);
-    startRecording();
+    startRecording(mediaStream, mediaRecorder, mediaChuncks);
   };
 
   const pause = () => {
