@@ -26,4 +26,14 @@ const stopRecording = (mediaRecorder, mediaChuncks) => {
   }
 };
 
-export { getMediaStream, startRecording, stopRecording };
+const resetRecording = (mediaRecorder, mediaChuncks) => {
+  if (mediaRecorder.current && mediaRecorder.current.state !== "inactive") {
+    mediaRecorder.current.stop();
+    mediaRecorder.current.onstop = (event) => {
+      mediaChuncks.current = [];
+    };
+    console.log(mediaRecorder.current.state);
+  }
+};
+
+export { getMediaStream, startRecording, stopRecording, resetRecording };
