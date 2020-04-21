@@ -5,6 +5,8 @@ import {
   startRecording,
   stopRecording,
   resetRecording,
+  pauseRecording,
+  resumeRecording,
 } from "./utils/audioRecording";
 
 const RecordNumbers = () => {
@@ -51,19 +53,6 @@ const RecordNumbers = () => {
       stopRecording(mediaRecorder, mediaChuncks);
   }, [isActive, index, array]);
 
-  const pauseRecording = () => {
-    if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
-      mediaRecorder.current.pause();
-      console.log(mediaRecorder.current.state);
-    }
-  };
-  const resumeRecording = () => {
-    if (mediaRecorder.current && mediaRecorder.current.state === "paused") {
-      mediaRecorder.current.resume();
-      console.log(mediaRecorder.current.state);
-    }
-  };
-
   const start = () => {
     setIsActive(!isActive);
     setIsPaused(false);
@@ -73,13 +62,13 @@ const RecordNumbers = () => {
   const pause = () => {
     setIsActive(!isActive);
     setIsPaused(true);
-    pauseRecording();
+    pauseRecording(mediaRecorder);
   };
 
   const resume = () => {
     setIsActive(!isActive);
     setIsPaused(false);
-    resumeRecording();
+    resumeRecording(mediaRecorder);
   };
 
   const reset = () => {
