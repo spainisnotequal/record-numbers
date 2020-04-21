@@ -1,17 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 
 const RecordNumbers = () => {
-  const IMAGE_CHANGE_INTERVAL = 2000;
+  const IMAGE_CHANGE_INTERVAL = 1000;
   // Hooks for the Timer
   const [index, setIndex] = useState(0);
   const [isActive, setIsActive] = useState(false);
 
-  const bicycle = require("./images/bicycle.jpg");
-  const car = require("./images/car.jpg");
-  const dog = require("./images/dog.jpg");
-  const horse = require("./images/horse.jpg");
-
-  const array = [bicycle, car, dog, horse];
+  const array = ["one", "two", "three", "four", "five"];
 
   useEffect(() => {
     let interval = null;
@@ -130,16 +125,7 @@ const RecordNumbers = () => {
 
   return (
     <>
-      <h2>
-        <img
-          src={array[index]}
-          alt=""
-          style={{
-            height: "128px",
-            width: "128px",
-          }}
-        />
-      </h2>
+      <h2>{array[index]}</h2>
       <br />
       <button onClick={!isPaused ? (!isActive ? start : pause) : resume}>
         {!isPaused ? (!isActive ? "Start" : "Pause") : "Resume"}
