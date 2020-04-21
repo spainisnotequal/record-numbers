@@ -13,4 +13,17 @@ const startRecording = (mediaStream, mediaRecorder, mediaChuncks) => {
   }
 };
 
-export { getMediaStream, startRecording };
+const stopRecording = (mediaRecorder, mediaChuncks) => {
+  if (mediaRecorder.current && mediaRecorder.current.state !== "inactive") {
+    mediaRecorder.current.stop();
+    console.log(mediaRecorder.current.state);
+
+    const blobProperty = { type: "audio/wav" };
+    const blob = new Blob(mediaChuncks.current, blobProperty);
+    const url = URL.createObjectURL(blob);
+    console.log("Bolb generated...");
+    console.log(url);
+  }
+};
+
+export { getMediaStream, startRecording, stopRecording };

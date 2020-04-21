@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import { getMediaStream, startRecording } from "./utils/audioRecording";
+import {
+  getMediaStream,
+  startRecording,
+  stopRecording,
+} from "./utils/audioRecording";
 
 const RecordNumbers = () => {
   const IMAGE_CHANGE_INTERVAL = 1000;
@@ -42,7 +46,8 @@ const RecordNumbers = () => {
 
   // Stop recording when reaching the last image
   useEffect(() => {
-    if (isActive && index === array.length - 1) stopRecording();
+    if (isActive && index === array.length - 1)
+      stopRecording(mediaRecorder, mediaChuncks);
   }, [isActive, index, array]);
 
   const pauseRecording = () => {
@@ -55,19 +60,6 @@ const RecordNumbers = () => {
     if (mediaRecorder.current && mediaRecorder.current.state === "paused") {
       mediaRecorder.current.resume();
       console.log(mediaRecorder.current.state);
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorder.current && mediaRecorder.current.state !== "inactive") {
-      mediaRecorder.current.stop();
-      console.log(mediaRecorder.current.state);
-
-      const blobProperty = { type: "audio/wav" };
-      const blob = new Blob(mediaChuncks.current, blobProperty);
-      const url = URL.createObjectURL(blob);
-      console.log("Bolb generated...");
-      console.log(url);
     }
   };
 
@@ -107,7 +99,7 @@ const RecordNumbers = () => {
     setIsActive(false);
     setIsPaused(false);
     setIndex(array.length - 1);
-    stopRecording();
+    stopRecording(mediaRecorder, mediaChuncks);
   };
 
   return (
