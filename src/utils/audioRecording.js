@@ -20,9 +20,7 @@ const stopRecording = (mediaRecorder, mediaChuncks) => {
 
     const blobProperty = { type: "audio/wav" };
     const blob = new Blob(mediaChuncks.current, blobProperty);
-    const url = URL.createObjectURL(blob);
-    console.log("Bolb generated...");
-    console.log(url);
+    console.log("Blob generated:", blob);
   }
 };
 
