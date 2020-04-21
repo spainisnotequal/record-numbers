@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
+import { getMediaStream } from "./utils/audioRecording";
+
 const RecordNumbers = () => {
   const IMAGE_CHANGE_INTERVAL = 1000;
   // Hooks for the Timer
@@ -28,19 +30,24 @@ const RecordNumbers = () => {
   const mediaChuncks = useRef([]);
   const [isPaused, setIsPaused] = useState(false);
 
-  const getMediaStream = () => {
-    console.log("Acquiring media");
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then((stream) => (mediaStream.current = stream))
-      .catch((err) => {
-        console.log("The following getUserMedia error occured: " + err);
-      });
-  };
+  // const getMediaStream = () => {
+  //   console.log("Acquiring media");
+  //   navigator.mediaDevices
+  //     .getUserMedia({ audio: true })
+  //     .then((stream) => (mediaStream.current = stream))
+  //     .catch((err) => {
+  //       console.log("The following getUserMedia error occured: " + err);
+  //     });
+  // };
 
   // Get media stream when loading the app
   useEffect(() => {
-    getMediaStream();
+    getMediaStream()
+      .then((stream) => {
+        mediaStream.current = stream;
+        console.log("mediaStream.current:", mediaStream.current);
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   // Stop recording when reaching the last image
