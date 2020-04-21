@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   getMediaStream,
   startRecording,
-  stopRecording,
   resetRecording,
   pauseRecording,
   resumeRecording,
@@ -15,7 +14,7 @@ const RecordNumbers = () => {
   const [index, setIndex] = useState(0);
   const [isActive, setIsActive] = useState(false);
 
-  const array = ["one", "two", "three", "four", "five"];
+  const array = ["one", "two", "three"];
 
   useEffect(() => {
     let interval = null;
@@ -49,8 +48,21 @@ const RecordNumbers = () => {
 
   // Stop recording when reaching the last image
   useEffect(() => {
-    if (isActive && index === array.length - 1)
-      stopRecording(mediaRecorder, mediaChuncks);
+    if (isActive && index === array.length - 1) {
+      if (mediaRecorder.current && mediaRecorder.current.state !== "inactive") {
+        mediaRecorder.current.stop();
+        console.log(mediaRecorder.current.state);
+
+        // Grab and finalize the recorded blob
+        mediaRecorder.current.onstop = () => {
+          const blob = new Blob(mediaChuncks.current, { type: "audio/wav" });
+          console.log("Blob generated:", blob);
+          mediaChuncks.current = [];
+          const url = URL.createObjectURL(blob);
+          console.log("Blob URL:", url);
+        };
+      }
+    }
   }, [isActive, index, array]);
 
   const start = () => {
@@ -78,13 +90,6 @@ const RecordNumbers = () => {
     resetRecording(mediaRecorder, mediaChuncks);
   };
 
-  const stop = () => {
-    setIsActive(false);
-    setIsPaused(false);
-    setIndex(array.length - 1);
-    stopRecording(mediaRecorder, mediaChuncks);
-  };
-
   return (
     <>
       <h2>{array[index]}</h2>
@@ -93,7 +98,6 @@ const RecordNumbers = () => {
         {!isPaused ? (!isActive ? "Start" : "Pause") : "Resume"}
       </button>
       <button onClick={reset}>Reset</button>
-      <button onClick={stop}>Stop</button>
     </>
   );
 };
